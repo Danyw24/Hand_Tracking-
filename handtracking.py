@@ -15,17 +15,20 @@
 
 import serialController
 import terminalGUI
+from terminalGUI import whioutArduino
 import HandsTrack
+import colorama
+from colorama import Fore, Back, Style
 import time
 import cv2
 from math import hypot
 
 
 #   ========================================       VALUES           ==================================================
-
-PORT = "COM3"
+colorama.init()
+PORT = "/dev/ttyACM0"
 BAUD = 9600
-CAM = 1
+CAM = 0
 WINDOW_NAME = "Hand Tracking by danyw24"
 WIDTH=640
 HEIGHT=480
@@ -45,6 +48,17 @@ def handTouch(img, lmslist, finger1,finger2, value, color, text):
         return True
 
 
+def detectDepthOfFand(img, lmslist, finger1,finger2, depht, depht2, color, text):
+    x1,y1 = lmslist[finger1][1], lmslist[finger1][2] #y
+    x2,y2 = lmslist[finger2][1], lmslist[finger2][2]
+    
+    length = hypot(x2-x1,y2-y1)
+
+    if int(length) <= depht  and int(length >= depht2):
+        cv2.line(img,(x1,y1),(x2,y2), color, 2)
+        cv2.putText(img, f">:{length.__ceil__()}", (20,50), cv2.FONT_HERSHEY_SIMPLEX,1,(0,255,0),3)
+        return True
+
 
 
 #   ========================================       MAIN FUNCTION         =================================================
@@ -53,7 +67,16 @@ def handTouch(img, lmslist, finger1,finger2, value, color, text):
 
 
 def main():
-    drone = serialController.droneController(PORT, BAUD)
+    if not whioutArduino:
+        drone = serialController.droneController(PORT, BAUD)
+    else:
+        drone = None
+
+    def sendKey(key):
+        if drone:
+            drone.sendKey(key)
+
+    
     try:
         cap = cv2.VideoCapture(CAM)
     except:
@@ -87,21 +110,33 @@ def main():
         
         
         if lmslist != []:
-            for handType in handTypes:
-                if handType=='Right':
-                    print("RIGHT--")
-                if handType=='Left':
-                    print("LEFT--")
+            #for handType in handTypes:
+             #   if handType=='Right':
+              #      print("RIGHT--")
+               # if handType=='Left':
+                #    print("LEFT--")
         
             # Finger detector, if true returns true boolean
-            if handTouch(img,lmslist, 4,8, 34, (25,25,247), "1"):
-                drone.sendKey(b'1')
-            elif handTouch(img,lmslist, 4,12, 34, (25,247,102), "2"):
-                drone.sendKey(b'2')
-            elif handTouch(img,lmslist, 4,16, 34, (247,68,25), "3"):
-                drone.sendKey(b'3')
-            elif handTouch(img,lmslist, 4,20, 34, (182,25,247), "4"):
-                drone.sendKey(b'4')
+
+            #STEP BACK
+
+            if detectDepthOfFand(img,lmslist, 0,9, 100, 80, (153, 255, 51), "1"):
+                sendKey(b'1')
+
+            #STEP UP
+
+            if detectDepthOfFand(img,lmslist, 0,9, 170, 140, (0, 0, 255), "1"):
+                sendKey(b'1')
+
+
+            if handTouch(img,lmslist, 4,8, 34, (255, 221, 51), "2"):
+                sendKey(b'2')
+            if handTouch(img,lmslist, 4,12, 34, (0, 204, 204), "2"):
+                sendKey(b'2')
+            if handTouch(img,lmslist, 4,16, 34, (255, 51, 153), "3"):
+                sendKey(b'3')
+            if handTouch(img,lmslist, 4,20, 34, (255, 153, 51), "4"):
+                sendKey(b'4')
 
         cv2.imshow(WINDOW_NAME, img)
         cv2.moveWindow(WINDOW_NAME, 0,0)
@@ -112,4 +147,8 @@ def main():
 
 #   ========================================       ENTRY POINT          ==================================================
 if __name__ == "__main__":
-    main()
+    try:
+        main()
+    except KeyboardInterrupt:
+        print(Fore.YELLOW,"\n\n[+] Gracias por usar mi programa :) \n",Fore.RESET)
+

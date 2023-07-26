@@ -3,14 +3,12 @@ import cv2
 
 
 class HandTracking:
-    def __init__(self, mode = False, maxHands = 2, minDetectionConfidence = 0.5, minTrackingConfidence= 0.5):
+    def __init__(self, mode = False, maxHands = 1):
         
         self.mode = mode
         self.maxHands = maxHands
-        self.minDetectionConfidence = minDetectionConfidence
-        self.minTrackingConfidence =  minTrackingConfidence
         self.mpHands = mp.solutions.hands
-        self.hands = self.mpHands.Hands(self.mode , self.maxHands, self.minDetectionConfidence,  self.minTrackingConfidence)
+        self.hands = self.mpHands.Hands(self.mode , self.maxHands)
         self.mpDraw = mp.solutions.drawing_utils
 
 
