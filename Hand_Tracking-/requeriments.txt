@@ -1,0 +1,5 @@
+pyserial
+mediapipe
+opencv-python
+colorama
+argparse
