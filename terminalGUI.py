@@ -89,6 +89,7 @@ OS = platform.system()
 
 if OS == "windows":
     clearCommand = "cls"
+    ipCommand = None
 elif OS == "Linux":
     clearCommand = "clear"
 
@@ -122,9 +123,6 @@ def initUI():
             print(helpLogoScreen)
             os.abort()
             break
-
-
-
 
 
 

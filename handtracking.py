@@ -9,7 +9,7 @@
 #   Github: https://github.com/Danyw24
 #   Description: Hand Tracking controller 
 #   Version: Python 3.9.11
-#   OS: Windows 11 MiniOS pro
+#   OS: Fedora 37
 
 
 
@@ -17,6 +17,7 @@ import serialController
 import terminalGUI
 from terminalGUI import whioutArduino
 import HandsTrack
+import os
 import colorama
 from colorama import Fore, Back, Style
 import time
@@ -32,6 +33,8 @@ CAM = 0
 WINDOW_NAME = "Hand Tracking by danyw24"
 WIDTH=640
 HEIGHT=480
+#ADDRESS = "172.20.10.36"
+#NET_PORT= 8080
 
 #   ========================================       HAND TOUCH          ==================================================
 
@@ -75,7 +78,7 @@ def main():
     def sendKey(key):
         if drone:
             drone.sendKey(key)
-
+     
     
     try:
         cap = cv2.VideoCapture(CAM)
@@ -120,23 +123,23 @@ def main():
 
             #STEP BACK
 
-            if detectDepthOfFand(img,lmslist, 0,9, 100, 80, (153, 255, 51), "1"):
-                sendKey(b'1')
+            #if detectDepthOfFand(img,lmslist, 0,9, 100, 80, (153, 255, 51), "1"):
+              #  sendKey("3\n")
 
             #STEP UP
 
-            if detectDepthOfFand(img,lmslist, 0,9, 170, 140, (0, 0, 255), "1"):
-                sendKey(b'1')
+            #if detectDepthOfFand(img,lmslist, 0,9, 170, 140, (0, 0, 255), "1"):
+             #   sendKey("2\n")
 
 
             if handTouch(img,lmslist, 4,8, 34, (255, 221, 51), "2"):
-                sendKey(b'2')
+                sendKey("UP\n")
             if handTouch(img,lmslist, 4,12, 34, (0, 204, 204), "2"):
-                sendKey(b'2')
+                sendKey("DOWN\n")
             if handTouch(img,lmslist, 4,16, 34, (255, 51, 153), "3"):
-                sendKey(b'3')
+                sendKey("LEFT\n")
             if handTouch(img,lmslist, 4,20, 34, (255, 153, 51), "4"):
-                sendKey(b'4')
+                sendKey("RIGHT\n")
 
         cv2.imshow(WINDOW_NAME, img)
         cv2.moveWindow(WINDOW_NAME, 0,0)
