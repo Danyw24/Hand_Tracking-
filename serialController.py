@@ -12,6 +12,7 @@ class droneController:
             os.abort()
             
     def sendKey(self, key): 
+        key = key.encode("utf-8")
         self.arduino.write(key)
             
     

@@ -27,7 +27,7 @@ from math import hypot
 
 #   ========================================       VALUES           ==================================================
 colorama.init()
-PORT = "/dev/ttyACM0"
+PORT = "/dev/ttyUSB0"
 BAUD = 9600
 CAM = 0
 WINDOW_NAME = "Hand Tracking by danyw24"
@@ -133,13 +133,13 @@ def main():
 
 
             if handTouch(img,lmslist, 4,8, 34, (255, 221, 51), "2"):
-                sendKey("UP\n")
+                sendKey("up\n")
             if handTouch(img,lmslist, 4,12, 34, (0, 204, 204), "2"):
-                sendKey("DOWN\n")
+                sendKey("down\n")
             if handTouch(img,lmslist, 4,16, 34, (255, 51, 153), "3"):
-                sendKey("LEFT\n")
+                sendKey("left\n")
             if handTouch(img,lmslist, 4,20, 34, (255, 153, 51), "4"):
-                sendKey("RIGHT\n")
+                sendKey("right\n")
 
         cv2.imshow(WINDOW_NAME, img)
         cv2.moveWindow(WINDOW_NAME, 0,0)
